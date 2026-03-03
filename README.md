@@ -1,8 +1,10 @@
 # RankSim
 
-> **An experiment built with [Claude Code](https://claude.ai/code)** — this project was designed and implemented through an AI-assisted development workflow using Anthropic's Claude Code CLI.
+> Built with [Claude Code](https://claude.ai/code) — an experiment in AI-assisted development.
 
-RankSim is a **Ranked Matchmaking Simulator** that lets you explore how different rating strategies and real-world player behaviors affect matchmaking quality over time. Configure a simulation, run it, and watch live metric dashboards as the system evolves.
+RankSim is a **Ranked Matchmaking Simulator** that explores how rating algorithms (Elo, Glicko-2, TrueSkill) and player behaviors (smurfing, rage-quitting, fading interest) affect matchmaking quality over time.
+
+Configure a simulation, run it, and watch live metric dashboards update in real time as the system evolves through thousands of matches.
 
 ## What it does
 
@@ -13,84 +15,30 @@ RankSim models a player pool going through thousands of matches and tracks how w
 - **Matchmaking strategies** — strict skill matching vs. queue-time balanced approaches
 - **Simulation scale** — number of players, matches per tick, total ticks
 
-Metrics tracked include rating convergence, match quality (skill gap between opponents), queue times, and rank distribution over time — all visualized as real-time charts while the simulation runs.
-
 ## Features
 
-- **Multiple rating systems**: Elo (classic), Glicko-2 (rating deviation + volatility), TrueSkill (Bayesian, designed for team games)
-- **Behavioral modifiers**: configurable rates for smurfs, rage-quitters, and disengaging players
-- **Real-time progress**: SignalR pushes simulation snapshots to the frontend as they're computed
-- **Persistent history**: every simulation run is stored with its full config and results
-- **Comparison view**: load past runs side-by-side to compare parameter sets
-- **Fully tested**: xUnit for backend logic, Vitest + React Testing Library for frontend components
+- Multiple rating systems: Elo, Glicko-2, TrueSkill
+- Configurable behavioral modifiers: smurfs, rage-quitters, disengaging players
+- Real-time progress via SignalR — simulation snapshots pushed to the frontend as they're computed
+- Persistent history — every run stored with its full config and results
+- Comparison view — load past runs side-by-side to compare parameter sets
 
-## Tech stack
+## Tech Stack
 
-| Layer | Technology |
-|---|---|
-| Backend API | .NET 8 / ASP.NET Core / SignalR |
-| Rating engine | C# (zero external deps, pure domain logic) |
-| Persistence | Entity Framework Core + SQLite |
-| Frontend | React 18 + TypeScript + Vite |
-| UI components | Tailwind CSS + shadcn/ui |
-| Charts | Recharts |
-| Backend tests | xUnit |
-| Frontend tests | Vitest + React Testing Library |
+- **Backend**: .NET 8, ASP.NET Core, SignalR, EF Core + SQLite
+- **Frontend**: React 18 + TypeScript, Vite, Tailwind CSS, Recharts
 
-## Project structure
-
-```
-RankSim/
-├── src/
-│   ├── RankSim.Core/          # Rating systems, matchmaking, simulation engine (no external deps)
-│   ├── RankSim.Api/           # ASP.NET Core Web API + SignalR hub
-│   ├── RankSim.Infrastructure/ # EF Core + SQLite persistence
-│   └── RankSim.Web/           # React + TypeScript frontend
-└── tests/
-    ├── RankSim.Core.Tests/    # Unit tests for core domain logic
-    └── RankSim.Api.Tests/     # Integration tests for API endpoints
-```
-
-## Getting started
-
-### Prerequisites
-
-- [.NET 8 SDK](https://dotnet.microsoft.com/download)
-- [Node.js 20+](https://nodejs.org/)
-
-### Run the backend
-
-```bash
-dotnet run --project src/RankSim.Api
-```
-
-### Run the frontend
-
-```bash
-cd src/RankSim.Web
-npm install
-npm run dev
-```
-
-Open `http://localhost:5173` — the frontend proxies API calls to the .NET backend.
-
-### Run tests
+## Getting Started
 
 ```bash
 # Backend
-dotnet test
+dotnet run --project src/RankSim.Api
 
 # Frontend
-cd src/RankSim.Web && npm run test
+cd src/RankSim.Web && npm install && npm run dev
 ```
 
-## Architecture notes
-
-**RankSim.Core has zero external dependencies.** All business logic (rating systems, matchmaking, simulation engine, metrics) lives here. The API and Infrastructure layers depend on Core; Core depends on nothing.
-
-**Single-table persistence.** `SimulationRuns` stores `ConfigJson` and `ResultsJson` as serialized text columns — document storage on top of SQLite rather than relational modeling.
-
-**Two-phase communication.** Frontend POSTs a config to the REST API and receives a `simulationId`. It then connects via SignalR and calls `StartSimulation(simulationId)`, receiving `OnProgress` snapshots every N ticks until `OnCompleted` fires.
+Open `http://localhost:5173`.
 
 ## License
 
