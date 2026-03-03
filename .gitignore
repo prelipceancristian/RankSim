@@ -1,0 +1,88 @@
+## ── .NET ──────────────────────────────────────────────────────────────────────
+
+# Build outputs
+[Bb]in/
+[Oo]bj/
+
+# Visual Studio / Rider
+.vs/
+.idea/
+*.user
+*.suo
+*.userprefs
+*.userosscache
+*.sln.docstates
+
+# MSBuild
+project.lock.json
+project.fragment.lock.json
+artifacts/
+
+# NuGet
+*.nupkg
+*.snupkg
+.nuget/
+packages/
+!**/packages/build/
+nuget.config
+# Restore script is fine to keep, but the restored files are not
+*.nupkg
+
+# Entity Framework
+*.db
+*.db-shm
+*.db-wal
+migrations/*.db
+
+# Test results
+TestResults/
+*.trx
+*.coveragexml
+coverage/
+
+# Publish output
+publish/
+
+## ── Node / Frontend ──────────────────────────────────────────────────────────
+
+node_modules/
+dist/
+.vite/
+*.local
+
+# Logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+# Coverage
+coverage/
+
+## ── OS ───────────────────────────────────────────────────────────────────────
+
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+._*
+
+# Windows
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+
+## ── Misc ─────────────────────────────────────────────────────────────────────
+
+# Environment files
+.env
+.env.*
+!.env.example
+
+# Editor config overrides
+.vscode/settings.json
+.vscode/launch.json
+.vscode/tasks.json
+!.vscode/extensions.json

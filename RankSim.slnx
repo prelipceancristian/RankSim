@@ -1,0 +1,11 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/RankSim.Api/RankSim.Api.csproj" />
+    <Project Path="src/RankSim.Core/RankSim.Core.csproj" />
+    <Project Path="src/RankSim.Infrastructure/RankSim.Infrastructure.csproj" />
+  </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/RankSim.Api.Tests/RankSim.Api.Tests.csproj" />
+    <Project Path="tests/RankSim.Core.Tests/RankSim.Core.Tests.csproj" />
+  </Folder>
+</Solution>
