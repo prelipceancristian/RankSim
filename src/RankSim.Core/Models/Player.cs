@@ -1,6 +1,8 @@
+using RankSim.Core.Rating;
+
 namespace RankSim.Core.Models;
 
-public abstract class Player
+public class Player
 {
     public Guid Id { get; set; }
     public required string Name { get; set; }
@@ -22,4 +24,21 @@ public abstract class Player
 
     /// <summary>Simulation tick on which the player last played a match.</summary>
     public int LastMatchTick { get; set; }
+
+    /// <summary>
+    /// The player's rating state, owned by the active <see cref="IRatingStrategy"/>.
+    /// Must be initialised via <see cref="IRatingStrategy.CreateInitialState"/>.
+    /// </summary>
+    public required IRatingState RatingState { get; set; }
+
+    /// <summary>
+    /// The player's displayed rating, derived from <see cref="RatingState"/>.
+    /// Used by the matchmaker to find and pair players.
+    /// </summary>
+    public double PublicRating => RatingState.PublicRating;
+
+    /// <summary>
+    /// The number of tokens that the player can use for doubling down their rank win/loss at the beginning of the match.
+    /// </summary>
+    public int DoubleDownTokens { get; set; }
 }

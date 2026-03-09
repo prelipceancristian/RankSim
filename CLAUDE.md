@@ -1,6 +1,6 @@
 # RankSim
 
-RankSim is a **Ranked Matchmaking Simulator** that analyzes how rating strategies (Elo, Glicko-2, TrueSkill) and external factors (smurfing, double-downs, fading interest) affect matchmaking quality. It runs configurable simulations on the backend and presents real-time metric dashboards on the frontend.
+RankSim is a **Ranked Matchmaking Simulator** that analyzes how rating strategies (Elo, Glicko-2, TrueSkill) and external factors (smurfing, double-downs, fading interest) affect matchmaking quality in team games. It runs configurable simulations on the backend and presents real-time metric dashboards on the frontend.
 
 ## Tech Stack
 
