@@ -39,8 +39,3 @@ cd src/RankSim.Web && npm install && npm run dev
 ```
 
 Open `http://localhost:5173`.
-
-## Committing work
-
-- Before committing and pushing, always run the unit tests and request changes until all tests pass.
-- Always use a lean commit message, that sums up the feature change, no co-author.

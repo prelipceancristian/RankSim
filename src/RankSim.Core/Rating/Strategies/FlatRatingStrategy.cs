@@ -1,11 +1,7 @@
 namespace RankSim.Core.Rating.Strategies;
 
-public sealed class FlatRatingStrategy : IRatingStrategy
+public sealed class FlatRatingStrategy(double delta = 25) : IRatingStrategy
 {
-    private readonly double _delta;
-
-    public FlatRatingStrategy(double delta = 25) => _delta = delta;
-
     public string Name => "Flat";
 
     public IRatingState CreateInitialState(double initialRating) => new FlatState(initialRating);
@@ -14,12 +10,12 @@ public sealed class FlatRatingStrategy : IRatingStrategy
     {
         var updatedWinners = winners.States
             .Cast<FlatState>()
-            .Select(s => (IRatingState)new FlatState(s.Rating + _delta))
+            .Select(IRatingState (s) => new FlatState(s.Rating + delta))
             .ToList();
 
         var updatedLosers = losers.States
             .Cast<FlatState>()
-            .Select(s => (IRatingState)new FlatState(s.Rating - _delta))
+            .Select(IRatingState (s) => new FlatState(s.Rating - delta))
             .ToList();
 
         return (new MatchTeam(updatedWinners), new MatchTeam(updatedLosers));

@@ -6,7 +6,7 @@ RankSim is a **Ranked Matchmaking Simulator** that analyzes how rating strategie
 
 - **Backend**: .NET 8 (C#), ASP.NET Core Web API, SignalR, Entity Framework Core + SQLite
 - **Frontend**: React 18 + TypeScript, Vite, Tailwind CSS, shadcn/ui, Recharts
-- **Testing**: xUnit (backend), Vitest + React Testing Library (frontend)
+- **Testing**: xUnit & Moq (backend), Vitest + React Testing Library (frontend)
 
 ### Backend
 
@@ -52,3 +52,8 @@ npm run lint       # ESLint
 ## After making changes
 
 Always run dotnet test and npm run lint before considering a task done.
+
+## Committing work
+
+- Before committing and pushing, always run the unit tests and request changes until all tests pass.
+- Always use a lean commit message, that sums up the feature change, no co-author.
