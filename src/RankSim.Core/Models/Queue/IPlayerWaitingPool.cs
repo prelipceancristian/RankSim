@@ -1,6 +1,6 @@
 namespace RankSim.Core.Models.Queue;
 
-public interface IMatchmaker
+public interface IPlayerWaitingPool
 {
     void Join(Player player, int currentTick);
     void Leave(Player player);

@@ -6,20 +6,20 @@ using RankSim.Core.Rating.Strategies;
 
 namespace RankSim.Core.Tests.Queue;
 
-public static class MatchmakerTests
+public static class PlayerWaitingPoolTests
 {
     private static readonly FlatRatingStrategy RatingStrategy = new();
 
     public class Join
     {
-        private readonly Matchmaker _matchmaker;
+        private readonly PlayerWaitingPool _playerWaitingPool;
 
         public Join()
         {
             var alwaysJoinNeverLeaveStrategy = new Mock<IQueueStrategy>();
             alwaysJoinNeverLeaveStrategy.Setup(s => s.ShouldJoin(It.IsAny<QueueContext>())).Returns(true);
             alwaysJoinNeverLeaveStrategy.Setup(s => s.ShouldLeave(It.IsAny<QueueContext>())).Returns(false);
-            _matchmaker = new Matchmaker(alwaysJoinNeverLeaveStrategy.Object);
+            _playerWaitingPool = new PlayerWaitingPool(alwaysJoinNeverLeaveStrategy.Object);
         }
 
         [Fact]
@@ -29,10 +29,10 @@ public static class MatchmakerTests
             var player = CreateTestPlayer();
 
             // Act
-            _matchmaker.Join(player, 100);
+            _playerWaitingPool.Join(player, 100);
 
             // Assert
-            var entry = _matchmaker.FindEntry(player);
+            var entry = _playerWaitingPool.FindEntry(player);
             Assert.NotNull(entry);
             Assert.Equal(player.Id, entry.Player.Id);
             Assert.Equal(100, entry.JoinedAtTick);
@@ -45,11 +45,11 @@ public static class MatchmakerTests
             var player = CreateTestPlayer();
 
             // Act
-            _matchmaker.Join(player, 100);
-            _matchmaker.Join(player, 200); // Try to add again
+            _playerWaitingPool.Join(player, 100);
+            _playerWaitingPool.Join(player, 200); // Try to add again
 
             // Assert
-            var entry = _matchmaker.FindEntry(player);
+            var entry = _playerWaitingPool.FindEntry(player);
             Assert.NotNull(entry);
             Assert.Equal(100, entry.JoinedAtTick); // Should keep original join time
         }
@@ -57,14 +57,14 @@ public static class MatchmakerTests
 
     public class Leave
     {
-        private readonly Matchmaker _matchmaker;
+        private readonly PlayerWaitingPool _playerWaitingPool;
 
         public Leave()
         {
             var alwaysJoinNeverLeaveStrategy = new Mock<IQueueStrategy>();
             alwaysJoinNeverLeaveStrategy.Setup(s => s.ShouldJoin(It.IsAny<QueueContext>())).Returns(true);
             alwaysJoinNeverLeaveStrategy.Setup(s => s.ShouldLeave(It.IsAny<QueueContext>())).Returns(false);
-            _matchmaker = new Matchmaker(alwaysJoinNeverLeaveStrategy.Object);
+            _playerWaitingPool = new PlayerWaitingPool(alwaysJoinNeverLeaveStrategy.Object);
         }
 
         [Fact]
@@ -72,13 +72,13 @@ public static class MatchmakerTests
         {
             // Arrange
             var player = CreateTestPlayer();
-            _matchmaker.Join(player, 100);
+            _playerWaitingPool.Join(player, 100);
 
             // Act
-            _matchmaker.Leave(player);
+            _playerWaitingPool.Leave(player);
 
             // Assert
-            var entry = _matchmaker.FindEntry(player);
+            var entry = _playerWaitingPool.FindEntry(player);
             Assert.Null(entry);
         }
 
@@ -89,24 +89,24 @@ public static class MatchmakerTests
             var player = CreateTestPlayer();
 
             // Act
-            _matchmaker.Leave(player);
+            _playerWaitingPool.Leave(player);
 
             // Assert - implicitly testing no exception is thrown
-            var entry = _matchmaker.FindEntry(player);
+            var entry = _playerWaitingPool.FindEntry(player);
             Assert.Null(entry);
         }
     }
 
     public class FindEntry
     {
-        private readonly Matchmaker _matchmaker;
+        private readonly PlayerWaitingPool _playerWaitingPool;
 
         public FindEntry()
         {
             var alwaysJoinNeverLeaveStrategy = new Mock<IQueueStrategy>();
             alwaysJoinNeverLeaveStrategy.Setup(s => s.ShouldJoin(It.IsAny<QueueContext>())).Returns(true);
             alwaysJoinNeverLeaveStrategy.Setup(s => s.ShouldLeave(It.IsAny<QueueContext>())).Returns(false);
-            _matchmaker = new Matchmaker(alwaysJoinNeverLeaveStrategy.Object);
+            _playerWaitingPool = new PlayerWaitingPool(alwaysJoinNeverLeaveStrategy.Object);
         }
 
         [Fact]
@@ -116,7 +116,7 @@ public static class MatchmakerTests
             var player = CreateTestPlayer();
 
             // Act
-            var entry = _matchmaker.FindEntry(player);
+            var entry = _playerWaitingPool.FindEntry(player);
 
             // Assert
             Assert.Null(entry);
@@ -128,12 +128,12 @@ public static class MatchmakerTests
             // Arrange
             var player1 = CreateTestPlayer();
             var player2 = CreateTestPlayer();
-            _matchmaker.Join(player1, 100);
-            _matchmaker.Join(player2, 200);
+            _playerWaitingPool.Join(player1, 100);
+            _playerWaitingPool.Join(player2, 200);
 
             // Act
-            var entry1 = _matchmaker.FindEntry(player1);
-            var entry2 = _matchmaker.FindEntry(player2);
+            var entry1 = _playerWaitingPool.FindEntry(player1);
+            var entry2 = _playerWaitingPool.FindEntry(player2);
 
             // Assert
             Assert.NotNull(entry1);
@@ -168,7 +168,7 @@ public static class MatchmakerTests
         public void AddsPlayersWhenStrategyReturnsTrue()
         {
             // Arrange
-            var matchmaker = new Matchmaker(_alwaysJoinNeverLeaveStrategy.Object);
+            var matchmaker = new PlayerWaitingPool(_alwaysJoinNeverLeaveStrategy.Object);
             var player1 = CreateTestPlayer();
             var player2 = CreateTestPlayer();
             var players = new List<Player> { player1, player2 };
@@ -185,7 +185,7 @@ public static class MatchmakerTests
         public void DoesNotAddPlayersWhenStrategyReturnsFalse()
         {
             // Arrange
-            var matchmaker = new Matchmaker(_neverJoinStrategy.Object);
+            var matchmaker = new PlayerWaitingPool(_neverJoinStrategy.Object);
             var player1 = CreateTestPlayer();
             var player2 = CreateTestPlayer();
             var players = new List<Player> { player1, player2 };
@@ -202,7 +202,7 @@ public static class MatchmakerTests
         public void RemovesPlayersWhenStrategyReturnsTrue()
         {
             // Arrange
-            var matchmaker = new Matchmaker(_alwaysLeaveStrategy.Object);
+            var matchmaker = new PlayerWaitingPool(_alwaysLeaveStrategy.Object);
             var player1 = CreateTestPlayer();
             var player2 = CreateTestPlayer();
 
@@ -224,7 +224,7 @@ public static class MatchmakerTests
         public void HandlesEmptyPlayerList()
         {
             // Arrange
-            var matchmaker = new Matchmaker(_alwaysJoinNeverLeaveStrategy.Object);
+            var matchmaker = new PlayerWaitingPool(_alwaysJoinNeverLeaveStrategy.Object);
             var players = new List<Player>();
 
             // Act
@@ -238,7 +238,7 @@ public static class MatchmakerTests
         public void HandlesPlayersAlreadyInQueue()
         {
             // Arrange
-            var matchmaker = new Matchmaker(_alwaysJoinNeverLeaveStrategy.Object);
+            var matchmaker = new PlayerWaitingPool(_alwaysJoinNeverLeaveStrategy.Object);
             var player = CreateTestPlayer();
             matchmaker.Join(player, 50);
 

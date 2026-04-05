@@ -2,7 +2,7 @@ using RankSim.Core.Models.Queue.Strategies;
 
 namespace RankSim.Core.Models.Queue;
 
-public class Matchmaker(IQueueStrategy queueStrategy) : IMatchmaker
+public class PlayerWaitingPool(IQueueStrategy queueStrategy) : IPlayerWaitingPool
 {
     private readonly Dictionary<Guid, QueueEntry> _store = [];
 
@@ -47,4 +47,6 @@ public class Matchmaker(IQueueStrategy queueStrategy) : IMatchmaker
             }
         }
     }
+
+    public int PlayersInQueue => _store.Count;
 }
