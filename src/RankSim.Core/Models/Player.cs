@@ -27,7 +27,7 @@ public class Player
 
     /// <summary>
     /// The player's rating state, owned by the active <see cref="IRatingStrategy"/>.
-    /// Must be initialised via <see cref="IRatingStrategy.CreateInitialState"/>.
+    /// Must be initialized via <see cref="IRatingStrategy.CreateInitialState"/>.
     /// </summary>
     public required IRatingState RatingState { get; set; }
 
@@ -40,5 +40,17 @@ public class Player
     /// <summary>
     /// The number of tokens that the player can use for doubling down their rank win/loss at the beginning of the match.
     /// </summary>
-    public int DoubleDownTokens { get; set; }
+    public int DoubleDownTokens { get; set; } = 100;
+
+    public override string ToString()
+    {
+        return $"Player[{Name}] " +
+               $"Id={Id}, " +
+               $"PublicRating={PublicRating:F2}, " +
+               $"HiddenRating={HiddenRating:F2}, " +
+               $"Interest={GameInterest:F2}, " +
+               $"Matches={MatchesPlayed}, " +
+               $"LastTick={LastMatchTick}, " +
+               $"Tokens={DoubleDownTokens}";
+    }
 }

@@ -3,6 +3,7 @@
     <Project Path="src/RankSim.Api/RankSim.Api.csproj" />
     <Project Path="src/RankSim.Core/RankSim.Core.csproj" />
     <Project Path="src/RankSim.Infrastructure/RankSim.Infrastructure.csproj" />
+    <Project Path="src/RankSim.Playground/RankSim.Playground.csproj" />
   </Folder>
   <Folder Name="/tests/">
     <Project Path="tests/RankSim.Api.Tests/RankSim.Api.Tests.csproj" />
