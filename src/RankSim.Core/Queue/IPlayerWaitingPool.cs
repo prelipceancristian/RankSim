@@ -1,4 +1,6 @@
-namespace RankSim.Core.Models.Queue;
+using RankSim.Core.Models;
+
+namespace RankSim.Core.Queue;
 
 public interface IPlayerWaitingPool
 {

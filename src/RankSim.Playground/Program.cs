@@ -1,6 +1,6 @@
 ﻿using RankSim.Core.Models;
-using RankSim.Core.Models.Queue;
-using RankSim.Core.Models.Queue.Strategies;
+using RankSim.Core.Queue;
+using RankSim.Core.Queue.Strategies;
 using RankSim.Core.Rating;
 using RankSim.Core.Rating.Strategies;
 

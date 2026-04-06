@@ -1,4 +1,6 @@
-namespace RankSim.Core.Models.Queue;
+using RankSim.Core.Models;
+
+namespace RankSim.Core.Queue;
 
 public sealed class QueueEntry(Player player, int joinedAtTick)
 {

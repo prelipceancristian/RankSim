@@ -1,6 +1,7 @@
-using RankSim.Core.Models.Queue.Strategies;
+using RankSim.Core.Models;
+using RankSim.Core.Queue.Strategies;
 
-namespace RankSim.Core.Models.Queue;
+namespace RankSim.Core.Queue;
 
 public class PlayerWaitingPool(IQueueStrategy queueStrategy) : IPlayerWaitingPool
 {

@@ -1,4 +1,4 @@
-namespace RankSim.Core.Models.Queue.Strategies;
+namespace RankSim.Core.Queue.Strategies;
 
 public class AlwaysJoinQueueStrategy : IQueueStrategy
 {
