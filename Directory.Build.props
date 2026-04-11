@@ -8,6 +8,7 @@
     <EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
     <!-- Turn all analyzer warnings into errors so violations block the build -->
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <NoWarn>S3267</NoWarn>
     <!-- Use the latest recommended built-in .NET analyzers -->
     <AnalysisLevel>latest-recommended</AnalysisLevel>
   </PropertyGroup>

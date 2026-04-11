@@ -1,61 +1,41 @@
 ﻿using RankSim.Core.Generators;
+using RankSim.Core.Matchmaking.Scoring;
+using RankSim.Core.Matchmaking.Strategies;
 
-const int playerCount = 100;
+const int playerCount = 200;
 const int seed = 0;
-#pragma warning disable S125
-// const int simulationTicks = 1000;
-#pragma warning restore S125
 
 var randomGenerator = new Random(seed);
-#pragma warning disable S125
-// var flatRatingStrategy = new FlatRatingStrategy();
-#pragma warning restore S125
-//
-// var players = GeneratePlayers(playerCount, randomGenerator, flatRatingStrategy);
-//
-// foreach (var player in players)
-// {
-//     Console.WriteLine(player);
-// }
-//
-// var queueStrategy = new InterestBasedQueueStrategy();
-// var waitingPool = new PlayerWaitingPool(queueStrategy);
-//
-// for (var tick = 0; tick < simulationTicks; tick++)
-// {
-//     waitingPool.ProcessTick(players, tick);
-//     Console.WriteLine($"Tick {tick} - players in queue {waitingPool.PlayersInQueue}");
-// }
-//
-// return;
-//
-// static List<Player> GeneratePlayers(int count, Random generator, IRatingStrategy ratingStrategy)
-// {
-//     return Enumerable.Range(0, count)
-//         .Select(index => GeneratePlayer(index, generator, ratingStrategy))
-//         .ToList();
-// }
-//
-// static Player GeneratePlayer(int index, Random generator, IRatingStrategy ratingStrategy)
-// {
-//     var initialRating = generator.Next(1, 5000);
-//     var gameInterest = generator.NextDouble();
-//     return new Player
-//     {
-//         Id = Guid.NewGuid(),
-//         Name = $"Player {index}",
-//         RatingState = ratingStrategy.CreateInitialState(initialRating),
-//         GameInterest = gameInterest,
-//     };
-// }
 
 var playerGenerator = new PlayerGenerator(randomGenerator);
 var players = Enumerable.Range(0, playerCount)
     .Select(_ => playerGenerator.Generate())
     .ToList();
 
-foreach (var player in players.OrderByDescending(p => p.HiddenRating))
+var metrics = new List<WeightedMetric>
 {
-    Console.WriteLine(player);
+    new (new IntraTeamSpreadMetric(), 1),
+    new (new TeamMmrDeltaMetric(), 1)
+};
+
+var matchmaker = new BalancedMatchmaker(5, metrics, randomGenerator);
+while (true)
+{
+    var match = matchmaker.TryCreateMatch(players);
+    if (match is null)
+    {
+        Console.WriteLine("No match found");
+        return;
+    }
+    foreach (var player in match.TeamA.Union(match.TeamB))
+    {
+        players.Remove(player);
+    }
+    var matchToCandidate = new MatchCandidate(match.TeamA, match.TeamB);
+    Console.WriteLine(match);
+    foreach (var weightedMetric in metrics)
+    {
+        Console.WriteLine($"{weightedMetric.Metric.Name}: {weightedMetric.Metric.Evaluate(matchToCandidate)}");
+    }
 }
 
