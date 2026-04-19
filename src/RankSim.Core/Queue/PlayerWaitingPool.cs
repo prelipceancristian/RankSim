@@ -49,5 +49,8 @@ public class PlayerWaitingPool(IQueueStrategy queueStrategy) : IPlayerWaitingPoo
         }
     }
 
+    public IEnumerable<Player> Players =>
+        _store.Values.Select(e => e.Player);
+
     public int PlayersInQueue => _store.Count;
 }

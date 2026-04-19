@@ -4,6 +4,7 @@ namespace RankSim.Core.Queue;
 
 public interface IPlayerWaitingPool
 {
+    IEnumerable<Player> Players { get; }
     void Join(Player player, int currentTick);
     void Leave(Player player);
     QueueEntry? FindEntry(Player player);
